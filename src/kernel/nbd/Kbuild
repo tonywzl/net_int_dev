@@ -1,0 +1,18 @@
+# Remove the line below to remove the debug output from vxfd.
+VXFD_DEBUG_BUILD = 1
+ifdef VXFD_DEBUG_BUILD
+EXTRA_CFLAGS += -DVXFD_DEBUG_PRINT
+endif
+
+EXTRA_CFLAGS += -DVXFD_ARC -DDEBUG_LEVEL=7 -D__KERNEL__
+
+# Remove the line below to remove the auditing code from vxfd.
+VXFD_AUDIT_BUILD = 0
+ifdef VXFD_AUDIT_BUILD 
+EXTRA_CFLAGS += -DVXFD_AUDIT
+vxfd_audit = audit.o
+endif
+
+obj-m := nbd.o
+nbd-y := new-nbd.o
+

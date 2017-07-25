@@ -1,0 +1,69 @@
+Distributed Write Cache Plan:
+
+Some Background: 
+One of reason for design DWC is that write cache need variant disk space at different running time for high performance. So we want to provide enough disk space for each write cache every time, but don't want to waste disk space.
+
+So with rs/rsm/rsa modules, we split disks into small rs unit(resouce unit), such as 256M for one rs unit. When write cache need more disk space, it alloc one rs unit. After filled the rs unit fully, write cache flush the data into real target disk, and release the rs unit.
+
+With this design, we can implement dynamical management of disk space of each write cache. When one write cache need to handle more requests, it can allocate more disk spaces. Otherwise it can allocate less disk spaces.
+
+DWC implement Steps:
+1. Porting common threads code from nwc0 to dwc.
+Currently, nwc0 has five threads, _nwc0_read_buf_thread, _nwc0_write_buf_thread, _nwc0_release_thread, _nwc0_freeze_flush_thread, _nwc0_post_read_thread.
+  1)_nwc0_read_buf_thread. This thread handle read request from upper layer.
+	Current:
+	<1>For each request, it will try to search from bse, to find out all existed sub request and fill the request buffer. 
+	<2>If there are some sub request didn't find in bse, then try to search from read cache.
+	<3>If there are still some sub reqeust didn't find in both bse and read cache, then read from real target disk.
+	
+	New:
+	So this thread won't talk with rsa, there isn't much more changes need to do.
+  
+  2)_nwc0_write_buf_thread. This thread handle write request from upper layer. 
+	Current:
+	<1>For each request, generate a iovector list and write to wc disk.
+	<2>If the wc disk is full, do rewind.
+	
+	New:
+	<1>implement a wcd2 module for managment i/o with wc disk.
+	<2>instead rewind with alloc new rs_unit.
+	<3>wc layout management for rs_unit.
+	
+  3)_nwc0_release_thread. This Thread talk with bfe for flush page content to target disk.
+	Current:
+	<1>Get current flush page, if needed, call bfe flush.
+	New:
+	no change is needed by now.
+	
+  4)_nwc0_freeze_flush_thread. This thread interative with snapshot feature. no change is needed by now.
+  
+  5)_nwc0_post_read_thread. This thread hanle response of finished requests.
+    Current:
+	<1>call sac response for each finished request.
+	<2>modify read counter accordingly.
+	
+	New:
+	no change is found by now.
+
+2. Implement wcd2 for management of dwc disk i/o.
+	Current:
+	implement in _nwc0_write_buf_thread.
+	
+	New:
+	waitting for wcd1 implement for nwc.
+	implement wcd2 for dwc.
+
+3. dwc recovery code.
+  Current:
+  recovery from one wc disk.
+  
+  New:
+  need to recover from rs_units.
+
+4. dwc coalesce code.
+  Need to cosider how much changes need to do coalesce.
+
+5. dwc statistics code.
+  Add more useful statistics functions for monitoring/debug dwc.
+
+6. other usual functions, such as read_list/write_list...

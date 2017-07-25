@@ -1,0 +1,5 @@
+EXTRA_CFLAGS += -DDEBUG_LEVEL=7 -D__KERNEL__
+
+obj-m := mpk_unit.o
+mpk_unit-y := mpk.o ut_mod.o
+

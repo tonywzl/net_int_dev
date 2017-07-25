@@ -1,0 +1,72 @@
+# $Id $
+#ident "$Source $"
+
+# $Copyright $
+
+CC = gcc
+KERN_VERSION := $(shell uname -r)
+KERNDIR ?= "/lib/modules/3.16.2-141009-generic/build"
+ 
+SYMLINKS = version.h nid_log.h nid_shared.h \
+	   mpk_if.h mpk.c \
+	   dat_if.h dat.c \
+	   mq_if.h mq.c \
+	   nl_if.h nl.c \
+	   nid.h driver.c device.c \
+	   main.c
+
+BASEDIR = ..
+
+all: $(SYMLINKS)
+	@echo "Using kernel module directory: $(value KERNDIR)"
+	make -C $(KERNDIR) M=`pwd` CC=$(CC) modules
+version.h:
+	ln -f -s $(BASEDIR)/../../build/version.h version.h
+nid_log.h:
+	ln -f -s $(BASEDIR)/nid_log.h nid_log.h
+
+nid_shared.h:
+	ln -f -s $(BASEDIR)/../shared/nid_shared.h nid_shared.h
+
+mpk_if.h:
+	ln -f -s $(BASEDIR)/../shared/mpk_if.h mpk_if.h
+
+mpk.c:
+	ln -f -s $(BASEDIR)/../shared/mpk.c mpk.c
+
+nid.h:
+	ln -f -s $(BASEDIR)/nid.h nid.h
+
+driver.c:
+	ln -f -s $(BASEDIR)/driver.c driver.c
+
+device.c:
+	ln -f -s $(BASEDIR)/device.c device.c
+
+dat_if.h:
+	ln -f -s $(BASEDIR)/dat_if.h dat_if.h
+
+dat.c:
+	ln -f -s $(BASEDIR)/dat.c dat.c
+
+mq_if.h:
+	ln -f -s $(BASEDIR)/mq_if.h mq_if.h
+
+mq.c:
+	ln -f -s $(BASEDIR)/mq.c mq.c
+
+nl_if.h:
+	ln -f -s $(BASEDIR)/nl_if.h nl_if.h
+
+nl.c:
+	ln -f -s $(BASEDIR)/nl.c nl.c
+
+main.c:
+	ln -f -s $(BASEDIR)/main.c main.c
+
+clean:
+	@echo "Using kernel module directory: $(value KERNDIR)"
+	make -C $(KERNDIR) M=`pwd` CC=$(CC) clean
+
+realclean: clean
+	rm -rf $(SYMLINKS) nid.ko *.o

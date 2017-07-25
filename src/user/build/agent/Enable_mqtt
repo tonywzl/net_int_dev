@@ -1,0 +1,4 @@
+apt-add-repository ppa:mosquitto-dev/mosquitto-ppa
+apt-get update
+apt-get install libmosquitto-dev
+Should also run these steps on your test vm(volume/svm) to make nidagent start properly.

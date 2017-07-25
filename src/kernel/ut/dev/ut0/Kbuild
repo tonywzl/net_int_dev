@@ -1,0 +1,5 @@
+EXTRA_CFLAGS += -DVXFD_ARC -DDEBUG_LEVEL=7 -D__KERNEL__
+
+obj-m := dev_unit.o
+dev_unit-y := dev.o ut_mod.o
+

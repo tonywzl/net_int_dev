@@ -1,0 +1,5 @@
+EXTRA_CFLAGS += -DDEBUG_LEVEL=4 -D__KERNEL__
+
+obj-m := nid.o
+nid-y := dev.o mpk.o mpk_subr.o dat.o mq.o nl.o ddg.o drv.o nid_mod.o
+

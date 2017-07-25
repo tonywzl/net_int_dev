@@ -1,0 +1,5 @@
+EXTRA_CFLAGS += -DVXFD_ARC -DDEBUG_LEVEL=7 -D__KERNEL__
+
+obj-m := rex_unit.o
+rex_unit-y := rex-policy0.o rex.o ut_mod.o
+

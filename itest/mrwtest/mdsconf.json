@@ -1,0 +1,43 @@
+{
+  "comment": {
+    "comment":				"DO NOT REODER sections or fileds inside a section!!!"
+  },
+  "global": {
+    "bufSize": 				4194304,
+    "unitSize":				4096,
+    "fpSize":				32,
+    "taskThreadNum":       		1,
+    "flushSleepUs":			5000,
+    "msStatSecs":			10
+  },
+  "ceph": {
+    "logObjCycle":			1024
+  },
+  "cass": {
+    "num_threads_io":                   1,
+    "queue_size_io":                     8192,
+    "queue_size_event":                  8192,
+    "core_connections_per_host":          1,
+    "max_connections_per_host":           2,
+    "max_concurrent_creation":           1,
+    "max_concurrent_requests_threshold":  100,
+    "max_requests_per_flush":     128,
+    "write_bytes_high_water_mark":          65536,
+    "write_bytes_low_water_mark":          32768,
+    "pending_requests_high_water_mark":         8192,
+    "pending_requests_low_water_mark":          4096,
+    "reconnect_wait_time":               2000,
+    "connect_timeout":          5000,
+    "request_timeout":          12000
+  },
+  "ns": {
+     "blkSize": 		4194304
+  },
+  "perf": {
+     "dbFcHigh":   	90,
+     "dbFcMed":     	70,
+     "dbFcLow":		50,
+     "dbFcDelta":       50,
+     "dbFcPauseUs":	1000
+  }
+}

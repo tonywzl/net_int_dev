@@ -1,0 +1,60 @@
+init
+
+AUTOMATIC BUILDING AND INSTALLATION
+==================================================
+Run the build-nid.sh script in this diorectory
+ ./build-nid.sh
+
+The above script builds all the required nid binaries, and installs them to
+the correct locations on this system. If the script encounters any errors,
+it exits with an error message and a return code of 1.
+A successful build will cause the script to return with exit code 0.
+
+
+MANUAL BUILDING AND INSTALLATION
+=====================================================
+These instructions received from Tony in an email sent Mar 27, 2014
+
+To build:
+
+1>     Pull the most recent nid project from git
+
+2>     Cd the nid root directory, say  “/root/tony/dev/nid/”
+
+3>     Mkdir build
+
+4>     Cd /root/tony/dev/nid/src/user/server; make;   cp nids /root/tony/dev/ilio-kernel-vsi
+
+5>     Cd /root/tony/dev/nid/src/user/admin;  make;   cp nidadm /root/tony/tony/dev/nid/build
+
+6>     Cd /root/tony/dev/nid/src/user/nbd;   make;   cp nbd-client /root/tony/tony/dev/nid/build
+
+7>     Cd /root/tony/dev/nid/src/kernel/nbd; make;   cp nbd.ko /root/tony/dev/ilio-kernel-vsi
+
+ 
+
+Note:
+
+                To build nbd.ko, you need to setup a symlink /lib/modules/3.10.3/build (Look at the Makefile). In my private build environment, I put my ilio kernel build at /root/tony/dev/ilio-kernel-vsi, so /lib/modules/3.10.3/build -> /root/tony/dev/ilio-kernel-vsi
+
+ 
+
+Now, You got everything at /root/tony/dev/ilio-kernel-vsi, it contains nids, nbd-client, nidadm, and nbd.ko
+
+You need:
+
+1>     Use nid  nbd-client and nbd.ko to replace the old nbd-client and nbd.ko
+
+2>     Eventually on an ilio:
+
+/bin/nids  ->  /usr/local/bin/nids
+
+/sbin/nbd-client  ->  /usr/local/sbin/nbd-client
+
+/bin/nidadm  ->  /usr/local/bin/nidadm
+
+nbd.ko -> /lib/modules/`uname -r`/kernel/drivers/block/nbd.ko
+(this replaces the kernel's own nbd.ko with the NID nbd.ko)
+
+And the new nbd.ko should be loaded in the kernel by “insmod nbd.ko”
+#test

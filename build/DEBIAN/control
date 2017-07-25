@@ -1,0 +1,8 @@
+Package: NID 
+Version: 0.0.0.0
+Section: utils
+Architecture: all 
+Installed-Size: 1024 
+Maintainer: Jie Yang <jiey@yahoo.com> 
+Description: NID Package
+

@@ -1,0 +1,37 @@
+	Bse: doing read without holding the search lock
+
+Holding the bse search lock when doing read could degrade performance
+drmatically since the bse search lock is for all I/O and release thread.
+This design is trying to solve this issue by introducing the atomic user_counter
+for each ddn
+
+Items:
+	Search lock: search_lck is per bse
+	atomic user counter: user_counter is per ddn
+
+read:
+	get read search_lck
+	doing search to find out the rtree node which contains the ddn
+	increase user_counter of the ddn
+	unlock search_lck
+	doing read
+	decrease user_counter of the ddn
+	if (user_counter == 0)
+		free the ddn 
+ 
+bse_del_node:
+	waiting until the ddn user_counter decrease to 1
+	get the write search_lck
+	remove the ddn from the search link list (d_slist)
+	remove the ddn node from rtree
+	unlock search_lck
+	ddn_put_node
+
+ddn_get_node
+	set the user_counter = 1
+
+ddn_put_node
+	decrease the user_counter
+	if (the user_counter == 0)
+		free the ddn
+

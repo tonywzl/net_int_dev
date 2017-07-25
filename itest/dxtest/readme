@@ -1,0 +1,8 @@
+used for dx module test to start nidserver as passive side
+ut/dxag direcory will run as active side
+it use private runtest.sh because there have no need
+
+test step:
+1 run runtest.sh in this directory to start passive side
+2 run unit test in ut/dxag as active side
+
